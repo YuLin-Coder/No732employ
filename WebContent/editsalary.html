@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+	<meta charset="utf-8">
+	<title>编辑员工薪资信息</title>
+	<link href="./asset/css/bootstrap.min.css" rel="stylesheet">
+	<link href="./asset/css/fonts.css" rel="stylesheet">
+	<link href="./asset/css/style.css" rel="stylesheet">
+</head>
+
+<body>
+	<!--页面主要内容-->
+	<main class="ftdms-layout-content" id="app">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="card">
+						<div class="card-header">
+							<h4>编辑员工薪资信息</h4>
+						</div>
+						<div class="card-body">
+							<div class="form-horizontal">
+								<div class="form-group">
+									<label class="col-md-3 control-label">薪资单号</label>
+									<div class="col-md-7">
+										<input class="form-control" type="text" id="sno" v-model="sno"
+											readonly="readonly">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-md-3 control-label">员工</label>
+									<div class="col-md-7">
+										<select class="form-control" id="employid"　v-model="employid">
+											<option :value="item.employid" v-for="item in employ">{{ item.realname }}
+											</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-md-3 control-label">基本工资</label>
+									<div class="col-md-7">
+										<input class="form-control" type="text" id="basic" v-model="basic"
+											placeholder="请输入基本工资">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-md-3 control-label">考勤工资</label>
+									<div class="col-md-7">
+										<input class="form-control" type="text" id="attend" v-model="attend"
+											placeholder="请输入考勤工资">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-md-3 control-label">奖惩工资</label>
+									<div class="col-md-7">
+										<input class="form-control" type="text" id="reward" v-model="reward"
+											placeholder="请输入奖惩工资">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-md-3 control-label">其他工资</label>
+									<div class="col-md-7">
+										<input class="form-control" type="text" id="others" v-model="others"
+											placeholder="请输入其他工资">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-md-3 control-label">总计</label>
+									<div class="col-md-7">
+										<input class="form-control" type="text" id="total" v-model="total" readonly
+											placeholder="请输入总计">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-md-3 control-label">年月</label>
+									<div class="col-md-7">
+										<input class="form-control" type="text" id="yearx" v-model="yearx"
+											placeholder="请输入年月" @click="getDate7()" readonly="readonly"
+											autocomplete="off">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-md-3 control-label">备注</label>
+									<div class="col-md-7">
+										<input class="form-control" type="text" id="memo" v-model="memo"
+											placeholder="请输入备注">
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="col-md-9 col-md-offset-3">
+										<button class="btn btn-primary" @click.prevent="update()">提交保存</button>
+										<button class="btn btn-default" @click.prevent="reset()">取消重置</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</main>
+
+	<script type="text/javascript" src="./asset/js/jquery.min.js"></script>
+	<script type="text/javascript" src="./asset/layui/layui.js"></script>
+	<script type="text/javascript" src="./asset/js/axios.min.js"></script>
+	<script type="text/javascript" src="./asset/js/vue.js"></script>
+	<script type="text/javascript">
+		const vue = new Vue({
+			el: '#app',// 绑定作用域
+			data: { //定义数据用于vue的双向绑定
+				salaryid: '',
+				sno: '', // 薪资单号
+				employid: '', // 员工
+				basic: '', // 基本工资
+				attend: '', // 考勤工资
+				reward: '', // 奖惩工资
+				others: '', // 其他工资
+				// total: '', // 总计
+				yearx: '', // 年月
+				memo: '', // 备注
+				employ: {},// 用来保存员工对象数据
+			},
+			computed:{
+				total:{// 总计
+					get:function(){ 
+						return Number(this.basic)+Number(this.attend)+Number(this.reward)+Number(this.others)+''
+					},
+					set:function(val){
+						
+					}
+				}
+			},
+			methods: {
+				getUrlParam: function () {
+					var name, value;
+					var str = location.href; // 取得整个地址栏
+					var num = str.indexOf("?"); // 定位参数起始位置
+					str = str.substr(num + 1); // 取得所有参数 
+					var arr = str.split("&"); // 各个参数放到数组里
+					for (var i = 0; i < arr.length; i++) {
+						num = arr[i].indexOf("=");
+						if (num > 0) {
+							name = arr[i].substring(0, num);
+							value = arr[i].substr(num + 1);
+							this.salaryid = value; // 确认主键参数
+						}
+					}
+				},
+				loadPage: function () {
+					let _this = this;
+					axios.get('http://127.0.0.1:8080/employ/salary/getSalaryById.action?id=' + _this.salaryid).then(result => {
+						_this.employid = result.data.employid;
+						_this.sno = result.data.sno;
+						_this.basic = result.data.basic;
+						_this.attend = result.data.attend;
+						_this.reward = result.data.reward;
+						_this.others = result.data.others;
+						_this.total = result.data.total;
+						_this.yearx = result.data.yearx;
+						_this.memo = result.data.memo;
+						axios.get('http://127.0.0.1:8080/employ/employ/getAllEmploy.action').then(result => {
+							_this.employ = result.data;
+						});
+					});
+				},
+				reset: function () {
+					this.loadPage();
+				},
+				update: function () {
+					let _this = this;
+					var data = {
+						salaryid: _this.salaryid,
+						sno: _this.sno,
+						employid: _this.employid,
+						basic: _this.basic,
+						attend: _this.attend,
+						reward: _this.reward,
+						others: _this.others,
+						total: _this.total,
+						yearx: _this.yearx,
+						memo: _this.memo,
+					};
+					axios.post('http://127.0.0.1:8080/employ/salary/updateSalary.action', data).then(result => {
+						if (result.data.code > 0) {
+							var index = parent.layer.getFrameIndex(window.name);
+							parent.location.reload();
+							parent.layer.close(index);
+						} else {
+							alert('修改失败');
+						}
+					});
+				},
+				getDate7: function () { // 日历点击事件
+					var _this = this;
+					var laydate = layui.laydate;
+					laydate.render({
+						elem: '#yearx',
+						show: true,
+						done: function (value) {
+							_this.yearx = value;
+						}
+					})
+				},
+
+
+
+			},
+
+			created() { // 生命周期相关的函数
+				this.getUrlParam();
+				this.loadPage();
+				let _this = this;
+			},
+		})
+	</script>
+
+</body>
+
+</html>

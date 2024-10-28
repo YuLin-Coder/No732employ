@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 配置关于员工培训表的 MyBatis映射文件 -->
+<!-- namespace：必须与对应的接口全类名一致 id:必须与对应接口的某个对应的方法名一致 -->
+<mapper namespace="com.dao.TrainsDAO">
+	<resultMap type="trains" id="trainsMap">
+		<id property="trainsid" column="trainsid" />
+		<result property="employid" column="employid" />
+		<result property="itemx" column="itemx" />
+		<result property="iswork" column="iswork" />
+		<result property="thestart" column="thestart" />
+		<result property="theend" column="theend" />
+		<result property="memo" column="memo" />
+		<result property="realname" column="realname" />
+	</resultMap>
+
+	<!-- 员工培训表 插入SQL语句  TrainsDAO通过ID(insertTrains)调用此配置 -->
+	<insert id="insertTrains" parameterType="trains">  
+		insert into trains(trainsid  , employid  , itemx  , iswork  , thestart  , theend  , memo ) values(#{trainsid}  , #{employid}   , #{itemx}   , #{iswork}   , #{thestart}   , #{theend}   , #{memo} )
+	</insert>
+
+	<!-- 员工培训表 更新SQL语句  TrainsDAO通过ID(updateTrains)调用此配置 -->
+	<update id="updateTrains" parameterType="trains">
+		update trains set  employid=#{employid}  , itemx=#{itemx}  , iswork=#{iswork}  , thestart=#{thestart}  , theend=#{theend}  , memo=#{memo}  where trainsid=#{trainsid}
+	</update>
+
+	<!-- 员工培训表 按主键删除SQL语句  TrainsDAO通过ID(deleteTrains)调用此配置 -->
+	<delete id="deleteTrains" parameterType="String">
+		delete from trains where trainsid = #{trainsid}
+	</delete>
+
+	<!-- 员工培训表 查询全部员工培训信息SQL语句  TrainsDAO通过ID(getAllTrains)调用此配置  -->
+	<select id="getAllTrains" resultMap="trainsMap">
+		select a.* , b.realname  from trains a , employ b  where 1=1 and a.employid = b.employid  order by trainsid desc
+	</select>
+
+	<!-- 员工培训表 按主键(trainsid)查询SQL语句 TrainsDAO通过ID(getTrainsById)调用此配置  -->
+	<select id="getTrainsById" parameterType="String" resultMap="trainsMap">
+		select a.* , b.realname  from trains a , employ b  where 1=1 and a.employid = b.employid and trainsid=#{trainsid} order by trainsid desc
+	</select>
+
+	<!-- 员工培训表 按条件精确查询SQL语句 TrainsDAO通过ID(getTrainsByCond)调用此配置  -->
+	<select id="getTrainsByCond" parameterType="trains" resultMap="trainsMap">
+		select a.* , b.realname  from trains a , employ b  where 1=1 and a.employid = b.employid 
+		<if test="employid != null and '' != employid">
+			and a.employid = #{employid}  
+		</if>
+		<if test="itemx != null and '' != itemx">
+			and a.itemx = #{itemx}  
+		</if>
+		<if test="iswork != null and '' != iswork">
+			and a.iswork = #{iswork}  
+		</if>
+		<if test="thestart != null and '' != thestart">
+			and a.thestart = #{thestart}  
+		</if>
+		<if test="theend != null and '' != theend">
+			and a.theend = #{theend}  
+		</if>
+		<if test="memo != null and '' != memo">
+			and a.memo = #{memo}  
+		</if>
+	</select>
+
+	<!-- 员工培训表 按条件模糊查询SQL语句 TrainsDAO通过ID(getTrainsByLike)调用此配置  -->
+	<select id="getTrainsByLike" parameterType="trains" resultMap="trainsMap">
+		select a.* , b.realname  from trains a , employ b  where 1=1 and a.employid = b.employid 
+		<if test="employid != null and '' != employid">
+			and b.realname like CONCAT('%', CONCAT(#{employid}, '%'))
+		</if>
+		<if test="itemx != null and '' != itemx">
+			and a.itemx like CONCAT('%', CONCAT(#{itemx}, '%'))
+		</if>
+		<if test="iswork != null and '' != iswork">
+			and a.iswork like CONCAT('%', CONCAT(#{iswork}, '%'))
+		</if>
+		<if test="thestart != null and '' != thestart">
+			and a.thestart like CONCAT('%', CONCAT(#{thestart}, '%'))
+		</if>
+		<if test="theend != null and '' != theend">
+			and a.theend like CONCAT('%', CONCAT(#{theend}, '%'))
+		</if>
+		<if test="memo != null and '' != memo">
+			and a.memo like CONCAT('%', CONCAT(#{memo}, '%'))
+		</if>
+	</select>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="utf-8">
+  <title>修改密码</title>
+  <link href="./asset/css/bootstrap.min.css" rel="stylesheet">
+  <link href="./asset/css/fonts.css" rel="stylesheet">
+  <link href="./asset/css/style.css" rel="stylesheet">
+</head>
+
+<body>
+  <!--页面主要内容-->
+  <main class="ftdms-layout-content" id="app">
+    <div class="container-fluid" style="margin-bottom:90px;">
+      <div class="row" style="margin-top:15px;">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header">
+              <h4>修改密码</h4>
+            </div>
+            <div class="card-body">
+              <div class="form-horizontal">
+                <div class="form-group">
+                  <label class="col-md-3 control-label">用户名</label>
+                  <div class="col-md-7">
+                    {{ adminname }}
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-3 control-label">密码</label>
+                  <div class="col-md-7">
+                    <input class="form-control" type="password" id="password" v-model="password" placeholder="请输入密码">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-3 control-label">新密码</label>
+                  <div class="col-md-7">
+                    <input class="form-control" type="password" id="newpassword" v-model="newpassword" placeholder="请输入新密码">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-3 control-label">确认密码</label>
+                  <div class="col-md-7">
+                    <input class="form-control" type="password" id="repassword" v-model="repassword" placeholder="请输入确认密码">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div class="col-md-9 col-md-offset-3">
+                    <button class="btn btn-primary" type="button" @click.prevent="editpwd()">提交保存</button>
+                    <button class="btn btn-default" type="button" @click.prevent="reset()">取消重置</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script type="text/javascript" src="./asset/js/jquery.min.js"></script>
+  <script type="text/javascript" src="./asset/js/bootstrap.js"></script>
+  <script type="text/javascript" src="./asset/js/perfect-scrollbar.min.js"></script>
+  <script type="text/javascript" src="./asset/js/main.min.js"></script>
+  <script type="text/javascript" src="./asset/layui/layui.js"></script>
+  <script type="text/javascript" src="./asset/js/axios.min.js"></script>
+  <script type="text/javascript" src="./asset/js/vue.js"></script>
+	<script type="text/javascript">
+		const vue = new Vue({ // 实例化Vue对象
+			el: '#app',// 绑定作用域
+			data: { //定义数据 用于vue的双向绑定
+				adminid: '',
+				adminname: '',
+				password: '',
+				newpassword: '',
+				repassword: '',
+			},
+			methods: {
+				editpwd: function () { // 修改按钮点击事件
+					let _this = this;
+					var data = {
+						adminid: _this.adminid,
+						password: _this.password,
+						repassword: _this.repassword,
+					};
+					axios.post('http://127.0.0.1:8080/employ/admin/editpwd.action', data).then(result => {
+						alert(result.data.message);
+						var index = parent.layer.getFrameIndex(window.name);
+						parent.layer.close(index);
+					});
+				},
+				reset: function () { // 重置按钮点击事件
+					password = '';
+					newpassword = '';
+					repassword = '';
+				},
+				validate: function () { // 验证输入非空
+
+				},
+				loadPage: function () { // 页面加载
+					this.adminid = sessionStorage.getItem('adminid');
+					this.adminname = sessionStorage.getItem('adminname');
+				},
+			},
+			created() { // 生命周期相关的函数
+				this.loadPage();
+			},
+		})
+	</script>
+
+</body>
+
+</html>
+
+

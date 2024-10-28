@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 配置关于员工薪资表的 MyBatis映射文件 -->
+<!-- namespace：必须与对应的接口全类名一致 id:必须与对应接口的某个对应的方法名一致 -->
+<mapper namespace="com.dao.SalaryDAO">
+	<resultMap type="salary" id="salaryMap">
+		<id property="salaryid" column="salaryid" />
+		<result property="sno" column="sno" />
+		<result property="employid" column="employid" />
+		<result property="basic" column="basic" />
+		<result property="attend" column="attend" />
+		<result property="reward" column="reward" />
+		<result property="others" column="others" />
+		<result property="total" column="total" />
+		<result property="yearx" column="yearx" />
+		<result property="memo" column="memo" />
+		<result property="realname" column="realname" />
+	</resultMap>
+
+	<!-- 员工薪资表 插入SQL语句  SalaryDAO通过ID(insertSalary)调用此配置 -->
+	<insert id="insertSalary" parameterType="salary">  
+		insert into salary(salaryid  , sno  , employid  , basic  , attend  , reward  , others  , total  , yearx  , memo ) values(#{salaryid}  , #{sno}   , #{employid}   , #{basic}   , #{attend}   , #{reward}   , #{others}   , #{total}   , #{yearx}   , #{memo} )
+	</insert>
+
+	<!-- 员工薪资表 更新SQL语句  SalaryDAO通过ID(updateSalary)调用此配置 -->
+	<update id="updateSalary" parameterType="salary">
+		update salary set  sno=#{sno}  , employid=#{employid}  , basic=#{basic}  , attend=#{attend}  , reward=#{reward}  , others=#{others}  , total=#{total}  , yearx=#{yearx}  , memo=#{memo}  where salaryid=#{salaryid}
+	</update>
+
+	<!-- 员工薪资表 按主键删除SQL语句  SalaryDAO通过ID(deleteSalary)调用此配置 -->
+	<delete id="deleteSalary" parameterType="String">
+		delete from salary where salaryid = #{salaryid}
+	</delete>
+
+	<!-- 员工薪资表 查询全部员工薪资信息SQL语句  SalaryDAO通过ID(getAllSalary)调用此配置  -->
+	<select id="getAllSalary" resultMap="salaryMap">
+		select a.* , b.realname  from salary a , employ b  where 1=1 and a.employid = b.employid  order by salaryid desc
+	</select>
+
+	<!-- 员工薪资表 按主键(salaryid)查询SQL语句 SalaryDAO通过ID(getSalaryById)调用此配置  -->
+	<select id="getSalaryById" parameterType="String" resultMap="salaryMap">
+		select a.* , b.realname  from salary a , employ b  where 1=1 and a.employid = b.employid and salaryid=#{salaryid} order by salaryid desc
+	</select>
+
+	<!-- 员工薪资表 按条件精确查询SQL语句 SalaryDAO通过ID(getSalaryByCond)调用此配置  -->
+	<select id="getSalaryByCond" parameterType="salary" resultMap="salaryMap">
+		select a.* , b.realname  from salary a , employ b  where 1=1 and a.employid = b.employid 
+		<if test="sno != null and '' != sno">
+			and a.sno = #{sno}  
+		</if>
+		<if test="employid != null and '' != employid">
+			and a.employid = #{employid}  
+		</if>
+		<if test="basic != null and '' != basic">
+			and a.basic = #{basic}  
+		</if>
+		<if test="attend != null and '' != attend">
+			and a.attend = #{attend}  
+		</if>
+		<if test="reward != null and '' != reward">
+			and a.reward = #{reward}  
+		</if>
+		<if test="others != null and '' != others">
+			and a.others = #{others}  
+		</if>
+		<if test="total != null and '' != total">
+			and a.total = #{total}  
+		</if>
+		<if test="yearx != null and '' != yearx">
+			and a.yearx = #{yearx}  
+		</if>
+		<if test="memo != null and '' != memo">
+			and a.memo = #{memo}  
+		</if>
+	</select>
+
+	<!-- 员工薪资表 按条件模糊查询SQL语句 SalaryDAO通过ID(getSalaryByLike)调用此配置  -->
+	<select id="getSalaryByLike" parameterType="salary" resultMap="salaryMap">
+		select a.* , b.realname  from salary a , employ b  where 1=1 and a.employid = b.employid 
+		<if test="sno != null and '' != sno">
+			and a.sno like CONCAT('%', CONCAT(#{sno}, '%'))
+		</if>
+		<if test="employid != null and '' != employid">
+			and b.realname like CONCAT('%', CONCAT(#{employid}, '%'))
+		</if>
+		<if test="basic != null and '' != basic">
+			and a.basic like CONCAT('%', CONCAT(#{basic}, '%'))
+		</if>
+		<if test="attend != null and '' != attend">
+			and a.attend like CONCAT('%', CONCAT(#{attend}, '%'))
+		</if>
+		<if test="reward != null and '' != reward">
+			and a.reward like CONCAT('%', CONCAT(#{reward}, '%'))
+		</if>
+		<if test="others != null and '' != others">
+			and a.others like CONCAT('%', CONCAT(#{others}, '%'))
+		</if>
+		<if test="total != null and '' != total">
+			and a.total like CONCAT('%', CONCAT(#{total}, '%'))
+		</if>
+		<if test="yearx != null and '' != yearx">
+			and a.yearx like CONCAT('%', CONCAT(#{yearx}, '%'))
+		</if>
+		<if test="memo != null and '' != memo">
+			and a.memo like CONCAT('%', CONCAT(#{memo}, '%'))
+		</if>
+	</select>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 配置关于部门表的 MyBatis映射文件 -->
+<!-- namespace：必须与对应的接口全类名一致 id:必须与对应接口的某个对应的方法名一致 -->
+<mapper namespace="com.dao.DeptDAO">
+	<resultMap type="dept" id="deptMap">
+		<id property="deptid" column="deptid" />
+		<result property="deptname" column="deptname" />
+		<result property="manager" column="manager" />
+		<result property="addtime" column="addtime" />
+		<result property="memo" column="memo" />
+	</resultMap>
+
+	<!-- 部门表 插入SQL语句  DeptDAO通过ID(insertDept)调用此配置 -->
+	<insert id="insertDept" parameterType="dept">  
+		insert into dept(deptid  , deptname  , manager  , addtime  , memo ) values(#{deptid}  , #{deptname}   , #{manager}   , #{addtime}   , #{memo} )
+	</insert>
+
+	<!-- 部门表 更新SQL语句  DeptDAO通过ID(updateDept)调用此配置 -->
+	<update id="updateDept" parameterType="dept">
+		update dept set  deptname=#{deptname}  , manager=#{manager}  , addtime=#{addtime}  , memo=#{memo}  where deptid=#{deptid}
+	</update>
+
+	<!-- 部门表 按主键删除SQL语句  DeptDAO通过ID(deleteDept)调用此配置 -->
+	<delete id="deleteDept" parameterType="String">
+		delete from dept where deptid = #{deptid}
+	</delete>
+
+	<!-- 部门表 查询全部部门信息SQL语句  DeptDAO通过ID(getAllDept)调用此配置  -->
+	<select id="getAllDept" resultMap="deptMap">
+		select a.*  from dept a  where 1=1  order by deptid desc
+	</select>
+
+	<!-- 部门表 按主键(deptid)查询SQL语句 DeptDAO通过ID(getDeptById)调用此配置  -->
+	<select id="getDeptById" parameterType="String" resultMap="deptMap">
+		select a.*  from dept a  where 1=1 and deptid=#{deptid} order by deptid desc
+	</select>
+
+	<!-- 部门表 按条件精确查询SQL语句 DeptDAO通过ID(getDeptByCond)调用此配置  -->
+	<select id="getDeptByCond" parameterType="dept" resultMap="deptMap">
+		select a.*  from dept a  where 1=1 
+		<if test="deptname != null and '' != deptname">
+			and a.deptname = #{deptname}  
+		</if>
+		<if test="manager != null and '' != manager">
+			and a.manager = #{manager}  
+		</if>
+		<if test="addtime != null and '' != addtime">
+			and a.addtime = #{addtime}  
+		</if>
+		<if test="memo != null and '' != memo">
+			and a.memo = #{memo}  
+		</if>
+	</select>
+
+	<!-- 部门表 按条件模糊查询SQL语句 DeptDAO通过ID(getDeptByLike)调用此配置  -->
+	<select id="getDeptByLike" parameterType="dept" resultMap="deptMap">
+		select a.*  from dept a  where 1=1 
+		<if test="deptname != null and '' != deptname">
+			and a.deptname like CONCAT('%', CONCAT(#{deptname}, '%'))
+		</if>
+		<if test="manager != null and '' != manager">
+			and a.manager like CONCAT('%', CONCAT(#{manager}, '%'))
+		</if>
+		<if test="addtime != null and '' != addtime">
+			and a.addtime like CONCAT('%', CONCAT(#{addtime}, '%'))
+		</if>
+		<if test="memo != null and '' != memo">
+			and a.memo like CONCAT('%', CONCAT(#{memo}, '%'))
+		</if>
+	</select>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

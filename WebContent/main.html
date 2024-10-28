@@ -1,0 +1,245 @@
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>欢迎使用员工管理系统</title>
+  <link href="./asset/css/style.css" rel="stylesheet">
+  <link href="./asset/css/bootstrap.min.css" rel="stylesheet">
+  <link href="./asset/css/theme.css" rel="stylesheet">
+  <link href="./asset/css/fonts.css" rel="stylesheet">
+  <script src="./asset/js/jquery.min.js"></script>
+  <script src="./asset/js/bootstrap.js"></script>
+  <script src="./asset/js/jquery.cookie.js"></script>
+  <script src="./asset/js/framework.js"></script>
+</head>
+
+<body class="theme-blue-gradient" style="overflow: hidden;">
+  <div id="app">
+    <div id="theme-wrapper">
+      <header class="navbar" id="header-navbar">
+        <div class="container" style="padding-right: 0px;">
+          <a class="navbar-brand" id="logo" href="javascript:;">员工管理系统</a>
+          <div>
+            <ul class="nav navbar-nav pull-left">
+              <li>
+                <a id="make-small-nav" title="收起菜单">
+                  <div class="ftdms-aside-toggler">
+                    <span class="ftdms-toggler-bar"></span>
+                    <span class="ftdms-toggler-bar"></span>
+                    <span class="ftdms-toggler-bar"></span>
+                  </div>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <div class="pull-right" id="header-nav">
+            <ul class="user-nav">
+              <li style="list-style: none; margin-top: 5px;"><a href="javascript:;" data-toggle="dropdown"> <img
+                    class="img-qrcode img-qrcode-46" src="./asset/images/admin.jpg" title="" />欢迎您{{ adminname }}
+                  <span>您的角色 {{ role }}<span class="caret"></span></span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-right">
+                  <li><a href="javascript:;" @click="editpwd()"><i class="ftsucai-edit-2"></i> 修改密码</a></li>
+                  <li class="divider"></li>
+                  <li><a href="javascript:;" @click="exit()"><i class="ftsucai-exit2"></i> 退出登录</a></li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </div>
+    </div>
+    </header>
+    <!--菜单部分开始-->
+    <div class="container" id="page-wrapper">
+      <div class="row">
+        <div id="nav-col">
+          <div class="navbar-collapse navbar-ex1-collapse" id="sidebar-nav">
+            <ul class="nav nav-pills nav-stacked">
+              <li>
+                <a class="dropdown-toggle" href="javascript:;" data-id="a01">
+                  <i class="ft ftsucai-ic_leader"></i>
+                  <span>管理员信息管理</span>
+                  <i class="ft ftsucai-139 drop-icon"></i>
+                </a>
+                <ul class="submenu">
+                  <li>
+                    <a class="submenuitem" href="listadmin.html" data-id="link1" data-index="link01">管理员列表</a>
+                  </li>
+                </ul>
+              </li>
+              <li>
+                <a class="dropdown-toggle" href="javascript:;" data-id="a31">
+                  <i class="ft ftsucai-ren"></i>
+                  <span>员工信息管理</span>
+                  <i class="ft ftsucai-139 drop-icon"></i>
+                </a>
+                <ul class="submenu">
+                  <li>
+                    <a class="submenuitem" href="listemploy.html" data-id="link1" data-index="link31">员工列表</a>
+                  </li>
+                </ul>
+              </li>
+              <li>
+                <a class="dropdown-toggle" href="javascript:;" data-id="a11">
+                  <i class="ft ftsucai-appstore-fill"></i>
+                  <span>部门信息管理</span>
+                  <i class="ft ftsucai-139 drop-icon"></i>
+                </a>
+                <ul class="submenu">
+                  <li>
+                    <a class="submenuitem" href="listdept.html" data-id="link1" data-index="link11">部门列表</a>
+                  </li>
+                </ul>
+              </li>
+              <li>
+                <a class="dropdown-toggle" href="javascript:;" data-id="a21">
+                  <i class="ft ftsucai-appstore-fill"></i>
+                  <span>职务信息管理</span>
+                  <i class="ft ftsucai-139 drop-icon"></i>
+                </a>
+                <ul class="submenu">
+                  <li>
+                    <a class="submenuitem" href="listduty.html" data-id="link1" data-index="link21">职务列表</a>
+                  </li>
+                </ul>
+              </li>
+              <li>
+                <a class="dropdown-toggle" href="javascript:;" data-id="a41">
+                  <i class="ft ftsucai-appstore-fill"></i>
+                  <span>员工考勤信息管理</span>
+                  <i class="ft ftsucai-139 drop-icon"></i>
+                </a>
+                <ul class="submenu">
+                  <li>
+                    <a class="submenuitem" href="listattend.html" data-id="link1" data-index="link41">员工考勤列表</a>
+                  </li>
+                </ul>
+              </li>
+              <li>
+                <a class="dropdown-toggle" href="javascript:;" data-id="a51">
+                  <i class="ft ftsucai-appstore-fill"></i>
+                  <span>员工奖惩信息管理</span>
+                  <i class="ft ftsucai-139 drop-icon"></i>
+                </a>
+                <ul class="submenu">
+                  <li>
+                    <a class="submenuitem" href="listrewards.html" data-id="link1" data-index="link51">员工奖惩列表</a>
+                  </li>
+                </ul>
+              </li>
+              <li>
+                <a class="dropdown-toggle" href="javascript:;" data-id="a61">
+                  <i class="ft ftsucai-appstore-fill"></i>
+                  <span>员工培训信息管理</span>
+                  <i class="ft ftsucai-139 drop-icon"></i>
+                </a>
+                <ul class="submenu">
+                  <li>
+                    <a class="submenuitem" href="listtrains.html" data-id="link1" data-index="link61">员工培训列表</a>
+                  </li>
+                </ul>
+              </li>
+              <li>
+                <a class="dropdown-toggle" href="javascript:;" data-id="a71">
+                  <i class="ft ftsucai-appstore-fill"></i>
+                  <span>员工薪资信息管理</span>
+                  <i class="ft ftsucai-139 drop-icon"></i>
+                </a>
+                <ul class="submenu">
+                  <li>
+                    <a class="submenuitem" href="listsalary.html" data-id="link1" data-index="link71">员工薪资列表</a>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <!--菜单部分结束-->
+        <!--右侧内容部分开始-->
+        <div id="content-wrapper">
+          <div class="content-tabs" style="height:44px;border-bottom:2px solid #f0f0f0;">
+            <button class="roll-nav roll-left tabLeft">
+              <i class="ft ftsucai-backward2"></i>
+            </button>
+            <nav class="page-tabs menuTabs">
+              <div class="page-tabs-content" style="margin-left: 0px;">
+                <a class="menuTab active" href="javascript:;" data-id="welcome.html">欢迎首页</a>
+              </div>
+            </nav>
+            <button class="roll-nav roll-right tabRight">
+              <i class="ft ftsucai-forward3"></i>
+            </button>
+            <div class="btn-group roll-nav roll-right">
+              <button class="dropdown tabClose" data-toggle="dropdown">页签操作
+                <i class="ft caret" style="padding-top: 3px;"></i>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-right">
+                <li>
+                  <a class="tabReload" href="javascript:void();"><i class="ft ftsucai-spinner3"></i>刷新当前页面</a>
+                </li>
+                <li>
+                  <a class="tabCloseCurrent" href="javascript:void();"><i class="ft ftsucai-close-3"></i>关闭当前页面</a>
+                </li>
+                <li>
+                  <a class="tabCloseAll" href="javascript:void();"><i class="ft ftsucai-77"></i>关闭全部页面</a>
+                </li>
+                <li>
+                  <a class="tabCloseOther" href="javascript:void();"><i class="ft ftsucai-120"></i>除此之外全关</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="content-iframe" style="background-color: #f9f9f9;">
+            <div class="mainContent" id="content-main" style="margin: 0px; padding: 0px; height: 1050px;">
+              <iframe width="100%" height="100%" class="main_iframe" id="default" src="welcome.html" frameborder="0"
+                data-id="welcome.html"></iframe>
+            </div>
+          </div>
+        </div>
+        <!--右侧内容部分结束-->
+      </div>
+    </div>
+  </div>
+
+  <script src="./asset/js/index.js"></script>
+  <script src="./asset/js/indextab.js"></script>
+  <script src="./asset/js/pace.min.js"></script>
+  <script type="text/javascript" src="./asset/layui/layui.js"></script>
+  <script type="text/javascript" src="./asset/js/tool.js"></script>
+  <script type="text/javascript" src="./asset/js/axios.min.js"></script>
+  <script type="text/javascript" src="./asset/js/vue.js"></script>
+  <script type="text/javascript">
+    const vue = new Vue({ // 实例化Vue对象
+      el: '#app',// 绑定作用域
+      data: { //定义数据 用于vue的双向绑定
+        adminname: '',
+        realname: '',
+        role: '',
+      },
+      methods: {
+        exit: function () {
+          if (window.confirm('确定要退出吗？')) {
+            sessionStorage.clear(); // 删除sesstion数据
+            window.location.href = 'index.html';
+          }
+        },
+        editpwd: function () {
+          layer_show('修改密码', 'editpwd.html', 1000, 600);
+        },
+        loadPage: function () {
+          this.adminname = sessionStorage.getItem('adminname');
+          this.realname = sessionStorage.getItem('realname');
+          this.role = sessionStorage.getItem('role');
+        },
+      },
+      // 生命周期相关的函数
+      created() {
+        this.loadPage();
+      },
+    })
+  </script>
+
+</body>
+
+</html>

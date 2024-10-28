@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 配置关于员工表的 MyBatis映射文件 -->
+<!-- namespace：必须与对应的接口全类名一致 id:必须与对应接口的某个对应的方法名一致 -->
+<mapper namespace="com.dao.EmployDAO">
+	<resultMap type="employ" id="employMap">
+		<id property="employid" column="employid" />
+		<result property="eno" column="eno" />
+		<result property="realname" column="realname" />
+		<result property="sex" column="sex" />
+		<result property="deptid" column="deptid" />
+		<result property="dutyid" column="dutyid" />
+		<result property="xueli" column="xueli" />
+		<result property="graduate" column="graduate" />
+		<result property="workdate" column="workdate" />
+		<result property="memo" column="memo" />
+		<result property="deptname" column="deptname" />
+		<result property="dutyname" column="dutyname" />
+	</resultMap>
+
+	<!-- 员工表 插入SQL语句  EmployDAO通过ID(insertEmploy)调用此配置 -->
+	<insert id="insertEmploy" parameterType="employ">  
+		insert into employ(employid  , eno  , realname  , sex  , deptid  , dutyid  , xueli  , graduate  , workdate  , memo ) values(#{employid}  , #{eno}   , #{realname}   , #{sex}   , #{deptid}   , #{dutyid}   , #{xueli}   , #{graduate}   , #{workdate}   , #{memo} )
+	</insert>
+
+	<!-- 员工表 更新SQL语句  EmployDAO通过ID(updateEmploy)调用此配置 -->
+	<update id="updateEmploy" parameterType="employ">
+		update employ set  eno=#{eno}  , realname=#{realname}  , sex=#{sex}  , deptid=#{deptid}  , dutyid=#{dutyid}  , xueli=#{xueli}  , graduate=#{graduate}  , workdate=#{workdate}  , memo=#{memo}  where employid=#{employid}
+	</update>
+
+	<!-- 员工表 按主键删除SQL语句  EmployDAO通过ID(deleteEmploy)调用此配置 -->
+	<delete id="deleteEmploy" parameterType="String">
+		delete from employ where employid = #{employid}
+	</delete>
+
+	<!-- 员工表 查询全部员工信息SQL语句  EmployDAO通过ID(getAllEmploy)调用此配置  -->
+	<select id="getAllEmploy" resultMap="employMap">
+		select a.* , b.deptname , c.dutyname  from employ a , dept b , duty c  where 1=1 and a.deptid = b.deptid and a.dutyid = c.dutyid  order by employid desc
+	</select>
+
+	<!-- 员工表 按主键(employid)查询SQL语句 EmployDAO通过ID(getEmployById)调用此配置  -->
+	<select id="getEmployById" parameterType="String" resultMap="employMap">
+		select a.* , b.deptname , c.dutyname  from employ a , dept b , duty c  where 1=1 and a.deptid = b.deptid and a.dutyid = c.dutyid and employid=#{employid} order by employid desc
+	</select>
+
+	<!-- 员工表 按条件精确查询SQL语句 EmployDAO通过ID(getEmployByCond)调用此配置  -->
+	<select id="getEmployByCond" parameterType="employ" resultMap="employMap">
+		select a.* , b.deptname , c.dutyname  from employ a , dept b , duty c  where 1=1 and a.deptid = b.deptid and a.dutyid = c.dutyid 
+		<if test="eno != null and '' != eno">
+			and a.eno = #{eno}  
+		</if>
+		<if test="realname != null and '' != realname">
+			and a.realname = #{realname}  
+		</if>
+		<if test="sex != null and '' != sex">
+			and a.sex = #{sex}  
+		</if>
+		<if test="deptid != null and '' != deptid">
+			and a.deptid = #{deptid}  
+		</if>
+		<if test="dutyid != null and '' != dutyid">
+			and a.dutyid = #{dutyid}  
+		</if>
+		<if test="xueli != null and '' != xueli">
+			and a.xueli = #{xueli}  
+		</if>
+		<if test="graduate != null and '' != graduate">
+			and a.graduate = #{graduate}  
+		</if>
+		<if test="workdate != null and '' != workdate">
+			and a.workdate = #{workdate}  
+		</if>
+		<if test="memo != null and '' != memo">
+			and a.memo = #{memo}  
+		</if>
+	</select>
+
+	<!-- 员工表 按条件模糊查询SQL语句 EmployDAO通过ID(getEmployByLike)调用此配置  -->
+	<select id="getEmployByLike" parameterType="employ" resultMap="employMap">
+		select a.* , b.deptname , c.dutyname  from employ a , dept b , duty c  where 1=1 and a.deptid = b.deptid and a.dutyid = c.dutyid 
+		<if test="eno != null and '' != eno">
+			and a.eno like CONCAT('%', CONCAT(#{eno}, '%'))
+		</if>
+		<if test="realname != null and '' != realname">
+			and a.realname like CONCAT('%', CONCAT(#{realname}, '%'))
+		</if>
+		<if test="sex != null and '' != sex">
+			and a.sex like CONCAT('%', CONCAT(#{sex}, '%'))
+		</if>
+		<if test="deptid != null and '' != deptid">
+			and b.deptname like CONCAT('%', CONCAT(#{deptid}, '%'))
+		</if>
+		<if test="dutyid != null and '' != dutyid">
+			and c.dutyname like CONCAT('%', CONCAT(#{dutyid}, '%'))
+		</if>
+		<if test="xueli != null and '' != xueli">
+			and a.xueli like CONCAT('%', CONCAT(#{xueli}, '%'))
+		</if>
+		<if test="graduate != null and '' != graduate">
+			and a.graduate like CONCAT('%', CONCAT(#{graduate}, '%'))
+		</if>
+		<if test="workdate != null and '' != workdate">
+			and a.workdate like CONCAT('%', CONCAT(#{workdate}, '%'))
+		</if>
+		<if test="memo != null and '' != memo">
+			and a.memo like CONCAT('%', CONCAT(#{memo}, '%'))
+		</if>
+	</select>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

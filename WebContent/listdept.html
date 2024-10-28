@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="utf-8">
+  <title>部门数据列表</title>
+  <link rel="stylesheet" type="text/css" href="./asset/css/bootstrap.min.css" />
+  <link rel="stylesheet" type="text/css" href="./asset/css/fonts.css" />
+  <link rel="stylesheet" type="text/css" href="./asset/css/style.css" />
+  <link rel="stylesheet" type="text/css" href="./asset/layui/css/layui.css" />
+</head>
+
+<body>
+  <!--页面主要内容-->
+  <main class="ftdms-layout-content" id="app">
+    <div class="container-fluid" style="margin-bottom:90px;">
+      <div class="row" style="margin-top:15px;">
+        <div class="col-lg-12">
+          <div class="card">
+            <div class="card-toolbar clearfix">
+              <div class="toolbar-btn-action">
+                <a class="btn btn-danger submenuitem" href="javascript:;" @click="datadel()"> <i
+                    class="ftsucai-del-2"></i>批量删除</a>
+                <a class="btn btn-primary m-r-5 submenuitem" href="javascript:;"
+                  onclick="openForm('添加部门','adddept.html','1000','500')">
+                  <i class="ftsucai-44"></i>添加部门</a>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+
+                <table class="table table-bordered table-striped table-hover">
+                  <thead>
+                    <tr>
+                      <th style="text-align: center" width="5">&nbsp;</th>
+                      <th style="text-align: center">部门名称</th>
+                      <th style="text-align: center">负责人</th>
+                      <th style="text-align: center">创建日期</th>
+                      <th style="text-align: center">备注</th>
+                      <th style="text-align: center">操作</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+				<tr v-for="item in dept" :key="item.deptid">
+					<td style="text-align: center"><input type="checkbox" :value="item.deptid" v-model="ids"></td>
+                      <td style="text-align: center">{{ item.deptname }}</td>
+                      <td style="text-align: center">{{ item.manager }}</td>
+                      <td style="text-align: center">{{ item.addtime }}</td>
+                      <td style="text-align: center">{{ item.memo }}</td>
+                      <td style="text-align: center">&nbsp;&nbsp;<a href="javascript:;" title="编辑" @click="getDeptById(item.deptid)"><i
+                      	class="ftsucai-edit-2"></i></a>&nbsp;&nbsp;<a href="javascript:;"
+                      	@click="deleteDept(item.deptid)" title="删除"><i class="ftsucai-del-2"></i></a></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!-- 存放分页的容器 -->
+              <div id="layui" style="text-align: center"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <!--End 页面主要内容-->
+
+  <script type="text/javascript" src="./asset/js/jquery.min.js"></script>
+  <script type="text/javascript" src="./asset/js/bootstrap.js"></script>
+  <script type="text/javascript" src="./asset/js/perfect-scrollbar.min.js"></script>
+  <script type="text/javascript" src="./asset/js/main.min.js"></script>
+  <script type="text/javascript" src="./asset/layui/layui.js"></script>
+  <script type="text/javascript" src="./asset/js/tool.js"></script>
+  <script type="text/javascript" src="./asset/js/axios.min.js"></script>
+  <script type="text/javascript" src="./asset/js/vue.js"></script>
+	<script type="text/javascript">
+		const vue = new Vue({ // 实例化Vue对象
+			el: '#app',// 绑定作用域
+			data: { //定义数据 用于vue的双向绑定
+				dept: [],
+				ids: [],// 定义批量删除的数组
+				page: {},
+				count: 0,
+				page: 1,
+				limit: 10,
+			},
+			created() { // 生命周期相关的函数
+				this.loadTable(); // 调用查询部门信息的方法
+			},
+			methods: {
+				loadTable: function () { // 查询部门信息的函数
+					let _this = this;
+					axios.get('http://127.0.0.1:8080/employ/dept/getDeptByPage.action?page=' + _this.page + '&limit=' + _this.limit).then(result => {
+						_this.dept = result.data.data;
+						_this.count = result.data.count;
+						if (_this.page == 1) {
+							_this.loadPage();
+						}
+					});
+				},
+				loadPage: function () { // 调用LayUI分页标签的使用
+					layui.use(['laypage'], function () {
+						const laypage = layui.laypage;
+						laypage.render({
+							elem: 'layui', // 定义标签显示
+							count: vue.count, //数据量
+							limit: vue.limit,//每页限制
+							jump: function (obj, first) {
+								if (!first) {
+									vue.page = obj.curr;
+									vue.loadTable();
+								}
+							}
+						});
+					})
+				},
+				deleteDept: function (deptid) { // 根据主键删除部门信息
+					let _this = this;
+					if (window.confirm('确定要删除这条记录吗？')) {
+						axios.get('http://127.0.0.1:8080/employ/dept/deleteDept.action?id=' + deptid).then(result => {
+							if (result.data.code > 0) {
+								_this.loadTable();
+							} else {
+								alert('系统错误，请稍后再试');
+							}
+						});
+					}
+				},
+				datadel: function () { // 批量删除部门信息
+					let _this = this;
+					if (window.confirm('确定要批量删除记录吗？')) {
+						axios.post('http://127.0.0.1:8080/employ/dept/deleteDeptByIds.action', _this.ids).then(result => {
+							if (result.data.code > 0) {
+								_this.loadTable();
+							} else {
+								alert('系统错误，请稍后再试');
+							}
+						});
+					}
+				},
+				getDeptById: function (deptid) { // 编辑按钮点击事件
+					let url = 'editdept.html?id=' + deptid;
+					layer_show('编辑部门', url, 1000, 500);
+				},
+			},
+		});
+	</script>
+
+</body>
+
+</html>
+
+

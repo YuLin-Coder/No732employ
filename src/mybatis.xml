@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<!-- mybatis.xml作用：配置连接数据库的所有需要的环境 ， 必须连接到所有要使用的映射文件。 -->
+<configuration>
+	<!-- 配置别名：在MyBatis中为一个类取别名，配置别名是为了在对象映射文件中接收参数类型和返回参数类型时使用 -->
+	<typeAliases>
+		<typeAlias alias="admin" type="com.entity.Admin" /><!-- 管理员表别名为admin 映射类是 com.entity.Admin -->
+		<typeAlias alias="dept" type="com.entity.Dept" /><!-- 部门表别名为dept 映射类是 com.entity.Dept -->
+		<typeAlias alias="duty" type="com.entity.Duty" /><!-- 职务表别名为duty 映射类是 com.entity.Duty -->
+		<typeAlias alias="employ" type="com.entity.Employ" /><!-- 员工表别名为employ 映射类是 com.entity.Employ -->
+		<typeAlias alias="attend" type="com.entity.Attend" /><!-- 员工考勤表别名为attend 映射类是 com.entity.Attend -->
+		<typeAlias alias="rewards" type="com.entity.Rewards" /><!-- 员工奖惩表别名为rewards 映射类是 com.entity.Rewards -->
+		<typeAlias alias="trains" type="com.entity.Trains" /><!-- 员工培训表别名为trains 映射类是 com.entity.Trains -->
+		<typeAlias alias="salary" type="com.entity.Salary" /><!-- 员工薪资表别名为salary 映射类是 com.entity.Salary -->
+	</typeAliases>
+
+	<!-- mappers 标签是用来配置需要加载的 SQL 映射配置文件路径 -->
+	<mappers>
+		<mapper resource="mapper/admin.xml" /> <!-- 管理员映射文件 -->
+		<mapper resource="mapper/dept.xml" /> <!-- 部门映射文件 -->
+		<mapper resource="mapper/duty.xml" /> <!-- 职务映射文件 -->
+		<mapper resource="mapper/employ.xml" /> <!-- 员工映射文件 -->
+		<mapper resource="mapper/attend.xml" /> <!-- 员工考勤映射文件 -->
+		<mapper resource="mapper/rewards.xml" /> <!-- 员工奖惩映射文件 -->
+		<mapper resource="mapper/trains.xml" /> <!-- 员工培训映射文件 -->
+		<mapper resource="mapper/salary.xml" /> <!-- 员工薪资映射文件 -->
+	</mappers>
+</configuration>
+
+

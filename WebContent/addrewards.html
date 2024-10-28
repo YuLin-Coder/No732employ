@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="utf-8">
+  <title>添加员工奖惩信息</title>
+  <link href="./asset/css/bootstrap.min.css" rel="stylesheet">
+  <link href="./asset/css/fonts.css" rel="stylesheet">
+  <link href="./asset/css/style.css" rel="stylesheet">
+</head>
+
+<body>
+  <!--页面主要内容-->
+  <main class="ftdms-layout-content" id="app">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header">
+              <h4>添加员工奖惩信息</h4>
+            </div>
+            <div class="card-body">
+              <div class="form-horizontal">
+                <div class="form-group">
+                  <label class="col-md-3 control-label">员工</label>
+                  <div class="col-md-7">
+                    <select class="form-control" id="employid">
+                      <option :value="0">---请选择员工---</option>
+                      <option :value="item.employid" v-for="item in employ">{{ item.realname }}</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-3 control-label">奖惩类型</label>
+                  <div class="col-md-7">
+                    <label class="radio-inline">
+                      <input type="radio" id="cate-1" v-model="cate" value="奖励" checked>奖励
+                    </label>
+                    <label class="radio-inline">
+                      <input type="radio" id="cate-2" v-model="cate" value="惩处">惩处
+                    </label>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-3 control-label">奖惩原因</label>
+                  <div class="col-md-7">
+                    <input class="form-control" type="text" id="reason" v-model="reason" placeholder="请输入奖惩原因">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-3 control-label">处理意见</label>
+                  <div class="col-md-7">
+                    <input class="form-control" type="text" id="resultx" v-model="resultx" placeholder="请输入处理意见">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-3 control-label">奖惩日期</label>
+                  <div class="col-md-7">
+                    <input class="form-control" type="text" id="addtime" v-model="addtime" placeholder="请输入奖惩日期"
+                      @click="getDate4()" readonly="readonly" autocomplete="off">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-3 control-label">经手人</label>
+                  <div class="col-md-7">
+                    <input class="form-control" type="text" id="manager" v-model="manager" placeholder="请输入经手人">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-3 control-label">备注</label>
+                  <div class="col-md-7">
+                    <input class="form-control" type="text" id="memo" v-model="memo" placeholder="请输入备注">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div class="col-md-9 col-md-offset-3">
+                    <button class="btn btn-primary" @click.prevent="save()">提交保存</button>
+                    <button class="btn btn-default" @click.prevent="reset()">取消重置</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script type="text/javascript" src="./asset/js/jquery.min.js"></script>
+  <script type="text/javascript" src="./asset/layui/layui.js"></script>
+  <script type="text/javascript" src="./asset/js/axios.min.js"></script>
+  <script type="text/javascript" src="./asset/js/vue.js"></script>
+  <script type="text/javascript">
+    const vue = new Vue({ // 实例化Vue奖励象
+      el: '#app',// 绑定作用域
+      data: { //定义数据
+        employid: '0', // 定义员工数据
+        cate: '奖励', // 定义奖惩类型数据
+        reason: '', // 定义奖惩原因数据
+        resultx: '', // 定义处理意见数据
+        addtime: '', // 定义奖惩日期数据
+        manager: '', // 定义经手人数据
+        memo: '', // 定义备注数据
+        employ: {}, // 用来保存员工奖励象数据
+      },
+      methods: {
+        save: function () {
+          let _this = this;
+          var data = {
+            employid: $('#employid').val(),
+            cate: _this.cate,
+            reason: _this.reason,
+            resultx: _this.resultx,
+            addtime: _this.addtime,
+            manager: _this.manager,
+            memo: _this.memo,
+          };
+          axios.post('http://127.0.0.1:8080/employ/rewards/insertRewards.action', data).then(result => {
+            if (result.data.code > 0) {
+              if (window.confirm('保存成功,是否继续添加？')) {
+                _this.reset();
+              } else {
+                var index = parent.layer.getFrameIndex(window.name);
+                parent.location.reload();
+                parent.layer.close(index);
+              }
+            } else {
+              console.log('保存失败,请稍后再试');
+            }
+          });
+        },
+        reset: function () {
+          this.pageLoad();
+        },
+        pageLoad: function () { // 页面加载
+          this.employid = '0';
+          this.cate = '奖励';
+          this.reason = '';
+          this.resultx = '';
+          this.addtime = '';
+          this.manager = '';
+          this.memo = '';
+        },
+        validate: function () { // 验证输入非空
+        },
+        getDate4: function () { // 日历点击事件
+          var _this = this;
+          var laydate = layui.laydate;
+          laydate.render({
+            elem: '#addtime',
+            show: true,
+            done: function (value) {
+              _this.addtime = value;
+            }
+          })
+        },
+      },
+      created() { // 生命周期相关的函数
+        let _this = this;
+        axios.get('http://127.0.0.1:8080/employ/employ/getAllEmploy.action').then(result => {
+          _this.employ = result.data;
+        });
+        _this.pageLoad();
+      },
+    })
+  </script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 配置关于员工奖惩表的 MyBatis映射文件 -->
+<!-- namespace：必须与对应的接口全类名一致 id:必须与对应接口的某个对应的方法名一致 -->
+<mapper namespace="com.dao.RewardsDAO">
+	<resultMap type="rewards" id="rewardsMap">
+		<id property="rewardsid" column="rewardsid" />
+		<result property="employid" column="employid" />
+		<result property="cate" column="cate" />
+		<result property="reason" column="reason" />
+		<result property="resultx" column="resultx" />
+		<result property="addtime" column="addtime" />
+		<result property="manager" column="manager" />
+		<result property="memo" column="memo" />
+		<result property="realname" column="realname" />
+	</resultMap>
+
+	<!-- 员工奖惩表 插入SQL语句  RewardsDAO通过ID(insertRewards)调用此配置 -->
+	<insert id="insertRewards" parameterType="rewards">  
+		insert into rewards(rewardsid  , employid  , cate  , reason  , resultx  , addtime  , manager  , memo ) values(#{rewardsid}  , #{employid}   , #{cate}   , #{reason}   , #{resultx}   , #{addtime}   , #{manager}   , #{memo} )
+	</insert>
+
+	<!-- 员工奖惩表 更新SQL语句  RewardsDAO通过ID(updateRewards)调用此配置 -->
+	<update id="updateRewards" parameterType="rewards">
+		update rewards set  employid=#{employid}  , cate=#{cate}  , reason=#{reason}  , resultx=#{resultx}  , addtime=#{addtime}  , manager=#{manager}  , memo=#{memo}  where rewardsid=#{rewardsid}
+	</update>
+
+	<!-- 员工奖惩表 按主键删除SQL语句  RewardsDAO通过ID(deleteRewards)调用此配置 -->
+	<delete id="deleteRewards" parameterType="String">
+		delete from rewards where rewardsid = #{rewardsid}
+	</delete>
+
+	<!-- 员工奖惩表 查询全部员工奖惩信息SQL语句  RewardsDAO通过ID(getAllRewards)调用此配置  -->
+	<select id="getAllRewards" resultMap="rewardsMap">
+		select a.* , b.realname  from rewards a , employ b  where 1=1 and a.employid = b.employid  order by rewardsid desc
+	</select>
+
+	<!-- 员工奖惩表 按主键(rewardsid)查询SQL语句 RewardsDAO通过ID(getRewardsById)调用此配置  -->
+	<select id="getRewardsById" parameterType="String" resultMap="rewardsMap">
+		select a.* , b.realname  from rewards a , employ b  where 1=1 and a.employid = b.employid and rewardsid=#{rewardsid} order by rewardsid desc
+	</select>
+
+	<!-- 员工奖惩表 按条件精确查询SQL语句 RewardsDAO通过ID(getRewardsByCond)调用此配置  -->
+	<select id="getRewardsByCond" parameterType="rewards" resultMap="rewardsMap">
+		select a.* , b.realname  from rewards a , employ b  where 1=1 and a.employid = b.employid 
+		<if test="employid != null and '' != employid">
+			and a.employid = #{employid}  
+		</if>
+		<if test="cate != null and '' != cate">
+			and a.cate = #{cate}  
+		</if>
+		<if test="reason != null and '' != reason">
+			and a.reason = #{reason}  
+		</if>
+		<if test="resultx != null and '' != resultx">
+			and a.resultx = #{resultx}  
+		</if>
+		<if test="addtime != null and '' != addtime">
+			and a.addtime = #{addtime}  
+		</if>
+		<if test="manager != null and '' != manager">
+			and a.manager = #{manager}  
+		</if>
+		<if test="memo != null and '' != memo">
+			and a.memo = #{memo}  
+		</if>
+	</select>
+
+	<!-- 员工奖惩表 按条件模糊查询SQL语句 RewardsDAO通过ID(getRewardsByLike)调用此配置  -->
+	<select id="getRewardsByLike" parameterType="rewards" resultMap="rewardsMap">
+		select a.* , b.realname  from rewards a , employ b  where 1=1 and a.employid = b.employid 
+		<if test="employid != null and '' != employid">
+			and b.realname like CONCAT('%', CONCAT(#{employid}, '%'))
+		</if>
+		<if test="cate != null and '' != cate">
+			and a.cate like CONCAT('%', CONCAT(#{cate}, '%'))
+		</if>
+		<if test="reason != null and '' != reason">
+			and a.reason like CONCAT('%', CONCAT(#{reason}, '%'))
+		</if>
+		<if test="resultx != null and '' != resultx">
+			and a.resultx like CONCAT('%', CONCAT(#{resultx}, '%'))
+		</if>
+		<if test="addtime != null and '' != addtime">
+			and a.addtime like CONCAT('%', CONCAT(#{addtime}, '%'))
+		</if>
+		<if test="manager != null and '' != manager">
+			and a.manager like CONCAT('%', CONCAT(#{manager}, '%'))
+		</if>
+		<if test="memo != null and '' != memo">
+			and a.memo like CONCAT('%', CONCAT(#{memo}, '%'))
+		</if>
+	</select>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="utf-8">
+  <title>编辑员工信息</title>
+  <link href="./asset/css/bootstrap.min.css" rel="stylesheet">
+  <link href="./asset/css/fonts.css" rel="stylesheet">
+  <link href="./asset/css/style.css" rel="stylesheet">
+</head>
+
+<body>
+  <!--页面主要内容-->
+  <main class="ftdms-layout-content" id="app">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header">
+              <h4>编辑员工信息</h4>
+            </div>
+            <div class="card-body">
+              <div class="form-horizontal">
+                <div class="form-group">
+                  <label class="col-md-3 control-label">员工号</label>
+                  <div class="col-md-7">
+                    <input class="form-control" type="text" id="eno" v-model="eno" readonly="readonly">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-3 control-label">姓名</label>
+                  <div class="col-md-7">
+                    <input class="form-control" type="text" id="realname" v-model="realname" placeholder="请输入姓名">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-3 control-label">性别</label>
+                  <div class="col-md-7">
+                    <label class="radio-inline">
+                      <input type="radio" id="sex-1" v-model="sex" value="男" checked>男
+                    </label>
+                    <label class="radio-inline">
+                      <input type="radio" id="sex-2" v-model="sex" value="女">女
+                    </label>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-3 control-label">部门</label>
+                  <div class="col-md-7">
+                    <select class="form-control" id="deptid" v-model="deptid">
+                      <option :value="item.deptid" v-for="item in dept">{{ item.deptname }}</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-3 control-label">职务</label>
+                  <div class="col-md-7">
+                    <select class="form-control" id="dutyid" v-model="dutyid">
+                      <option :value="item.dutyid" v-for="item in duty">{{ item.dutyname }}</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-3 control-label">学历</label>
+                  <div class="col-md-7">
+                    <input class="form-control" type="text" id="xueli" v-model="xueli" placeholder="请输入学历">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-3 control-label">毕业院校</label>
+                  <div class="col-md-7">
+                    <input class="form-control" type="text" id="graduate" v-model="graduate" placeholder="请输入毕业院校">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-3 control-label">入职日期</label>
+                  <div class="col-md-7">
+                    <input class="form-control" type="text" id="workdate" v-model="workdate" placeholder="请输入入职日期"
+                      @click="getDate7()" readonly="readonly" autocomplete="off">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-3 control-label">备注</label>
+                  <div class="col-md-7">
+                    <input class="form-control" type="text" id="memo" v-model="memo" placeholder="请输入备注">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div class="col-md-9 col-md-offset-3">
+                    <button class="btn btn-primary" @click.prevent="update()">提交保存</button>
+                    <button class="btn btn-default" @click.prevent="reset()">取消重置</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script type="text/javascript" src="./asset/js/jquery.min.js"></script>
+  <script type="text/javascript" src="./asset/layui/layui.js"></script>
+  <script type="text/javascript" src="./asset/js/axios.min.js"></script>
+  <script type="text/javascript" src="./asset/js/vue.js"></script>
+  <script type="text/javascript">
+    const vue = new Vue({
+      el: '#app',// 绑定作用域
+      data: { //定义数据用于vue的双向绑定
+        employid: '',
+        eno: '', // 员工号
+        realname: '', // 姓名
+        sex: '男', // 性别
+        deptid: '', // 部门
+        dutyid: '', // 职务
+        xueli: '', // 学历
+        graduate: '', // 毕业院校
+        workdate: '', // 入职日期
+        memo: '', // 备注
+        dept: {},// 用来保存部门对象数据
+        duty: {},// 用来保存职务对象数据
+      },
+      methods: {
+        getUrlParam: function () {
+          var name, value;
+          var str = location.href; // 取得整个地址栏
+          var num = str.indexOf("?"); // 定位参数起始位置
+          str = str.substr(num + 1); // 取得所有参数 
+          var arr = str.split("&"); // 各个参数放到数组里
+          for (var i = 0; i < arr.length; i++) {
+            num = arr[i].indexOf("=");
+            if (num > 0) {
+              name = arr[i].substring(0, num);
+              value = arr[i].substr(num + 1);
+              this.employid = value; // 确认主键参数
+            }
+          }
+        },
+        loadPage: function () {
+          let _this = this;
+          axios.get('http://127.0.0.1:8080/employ/employ/getEmployById.action?id=' + _this.employid).then(result => {
+            _this.eno = result.data.eno;
+            _this.realname = result.data.realname;
+            _this.sex = result.data.sex;
+            _this.deptid = result.data.deptid;
+            _this.dutyid = result.data.dutyid;
+            _this.xueli = result.data.xueli;
+            _this.graduate = result.data.graduate;
+            _this.workdate = result.data.workdate;
+            _this.memo = result.data.memo;
+            axios.get('http://127.0.0.1:8080/employ/dept/getAllDept.action').then(result => {
+              _this.dept = result.data;
+            });
+            axios.get('http://127.0.0.1:8080/employ/duty/getAllDuty.action').then(result => {
+              _this.duty = result.data;
+            });
+          });
+        },
+        reset: function () {
+          this.loadPage();
+        },
+        update: function () {
+          let _this = this;
+          var data = {
+            employid: _this.employid,
+            eno: _this.eno,
+            realname: _this.realname,
+            sex: _this.sex,
+            deptid: _this.deptid,
+            dutyid: _this.dutyid,
+            xueli: _this.xueli,
+            graduate: _this.graduate,
+            workdate: _this.workdate,
+            memo: _this.memo,
+          };
+          axios.post('http://127.0.0.1:8080/employ/employ/updateEmploy.action', data).then(result => {
+            if (result.data.code > 0) {
+              var index = parent.layer.getFrameIndex(window.name);
+              parent.location.reload();
+              parent.layer.close(index);
+            } else {
+              alert('修改失败');
+            }
+          });
+        },
+        getDate7: function () { // 日历点击事件
+          var _this = this;
+          var laydate = layui.laydate;
+          laydate.render({
+            elem: '#workdate',
+            show: true,
+            done: function (value) {
+              _this.workdate = value;
+            }
+          })
+        },
+
+
+
+      },
+
+      created() { // 生命周期相关的函数
+        this.getUrlParam();
+        this.loadPage();
+        let _this = this;
+      },
+    })
+  </script>
+
+</body>
+
+</html>

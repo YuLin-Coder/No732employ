@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="utf-8">
+  <title>编辑管理员信息</title>
+  <link href="./asset/css/bootstrap.min.css" rel="stylesheet">
+  <link href="./asset/css/fonts.css" rel="stylesheet">
+  <link href="./asset/css/style.css" rel="stylesheet">
+</head>
+
+<body>
+  <!--页面主要内容-->
+  <main class="ftdms-layout-content" id="app">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header">
+              <h4>编辑管理员信息</h4>
+            </div>
+            <div class="card-body">
+              <div class="form-horizontal">
+                <div class="form-group">
+                  <label class="col-md-3 control-label">用户名</label>
+                  <div class="col-md-7">
+                    <input class="form-control" type="text" id="username" v-model="username" placeholder="请输入用户名">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-3 control-label">姓名</label>
+                  <div class="col-md-7">
+                    <input class="form-control" type="text" id="realname" v-model="realname" placeholder="请输入姓名">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-3 control-label">联系方式</label>
+                  <div class="col-md-7">
+                    <input class="form-control" type="text" id="contact" v-model="contact" placeholder="请输入联系方式">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div class="col-md-9 col-md-offset-3">
+                    <button class="btn btn-primary" @click.prevent="update()">提交保存</button>
+                    <button class="btn btn-default" @click.prevent="reset()">取消重置</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script type="text/javascript" src="./asset/js/jquery.min.js"></script>
+  <script type="text/javascript" src="./asset/layui/layui.js"></script>
+  <script type="text/javascript" src="./asset/js/axios.min.js"></script>
+  <script type="text/javascript" src="./asset/js/vue.js"></script>
+  <script type="text/javascript">
+		const vue = new Vue({
+			el: '#app',// 绑定作用域
+			data: { //定义数据用于vue的双向绑定
+				adminid: '',
+				username: '', // 用户名
+				password: '', // 密码
+				realname: '', // 姓名
+				contact: '', // 联系方式
+			},
+			methods: {
+				getUrlParam: function () {
+					var name, value;
+					var str = location.href; // 取得整个地址栏
+					var num = str.indexOf("?"); // 定位参数起始位置
+					str = str.substr(num + 1); // 取得所有参数 
+					var arr = str.split("&"); // 各个参数放到数组里
+					for (var i = 0; i < arr.length; i++) {
+						num = arr[i].indexOf("=");
+						if (num > 0) {
+							name = arr[i].substring(0, num);
+							value = arr[i].substr(num + 1);
+							this.adminid = value; // 确认主键参数
+						}
+					}
+				},
+				loadPage: function () {
+					let _this = this;
+					axios.get('http://127.0.0.1:8080/employ/admin/getAdminById.action?id=' + _this.adminid).then(result => {
+						_this.username= result.data.username;
+						_this.password= result.data.password;
+						_this.realname= result.data.realname;
+						_this.contact= result.data.contact;
+					});
+				},
+				reset: function () {
+					this.loadPage();
+				},
+				update: function () {
+					let _this = this;
+					var data = {
+						adminid: _this.adminid,
+						username: _this.username,
+						password: _this.password,
+						realname: _this.realname,
+						contact: _this.contact,
+					};
+					axios.post('http://127.0.0.1:8080/employ/admin/updateAdmin.action', data).then(result => {
+						if (result.data.code > 0) {
+							var index = parent.layer.getFrameIndex(window.name);
+							parent.location.reload();
+							parent.layer.close(index);
+						} else {
+							alert('修改失败');
+						}
+					});
+				},
+			},
+
+			created() { // 生命周期相关的函数
+				this.getUrlParam();
+				this.loadPage();
+				let _this = this;
+			},
+		})
+	</script>
+
+</body>
+
+</html>
+
+

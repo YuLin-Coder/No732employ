@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="utf-8">
+  <title>添加管理员信息</title>
+  <link href="./asset/css/bootstrap.min.css" rel="stylesheet">
+  <link href="./asset/css/fonts.css" rel="stylesheet">
+  <link href="./asset/css/style.css" rel="stylesheet">
+</head>
+
+<body>
+  <!--页面主要内容-->
+  <main class="ftdms-layout-content" id="app">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header">
+              <h4>添加管理员信息</h4>
+            </div>
+            <div class="card-body">
+              <div class="form-horizontal">
+                <div class="form-group">
+                  <label class="col-md-3 control-label">用户名</label>
+                  <div class="col-md-7">
+                    <input class="form-control" type="text" id="username" v-model="username" placeholder="请输入用户名">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-3 control-label">密码</label>
+                  <div class="col-md-7">
+                    <input type="password" class="form-control" id="password" v-model="password" placeholder="请输入密码">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-3 control-label">姓名</label>
+                  <div class="col-md-7">
+                    <input class="form-control" type="text" id="realname" v-model="realname" placeholder="请输入姓名">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-3 control-label">联系方式</label>
+                  <div class="col-md-7">
+                    <input class="form-control" type="text" id="contact" v-model="contact" placeholder="请输入联系方式">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div class="col-md-9 col-md-offset-3">
+                    <button class="btn btn-primary" @click.prevent="save()">提交保存</button>
+                    <button class="btn btn-default" @click.prevent="reset()">取消重置</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script type="text/javascript" src="./asset/js/jquery.min.js"></script>
+  <script type="text/javascript" src="./asset/layui/layui.js"></script>
+  <script type="text/javascript" src="./asset/js/axios.min.js"></script>
+  <script type="text/javascript" src="./asset/js/vue.js"></script>
+  <script type="text/javascript">
+    const vue = new Vue({ // 实例化Vue对象
+      el: '#app',// 绑定作用域
+      data: { //定义数据
+        username: '', // 定义用户名数据
+        password: '', // 定义密码数据
+        realname: '', // 定义姓名数据
+        contact: '', // 定义联系方式数据
+      },
+      methods: {
+        save: function () {
+          let _this = this;
+          var data = {
+            username: _this.username,
+            password: _this.password,
+            realname: _this.realname,
+            contact: _this.contact,
+          };
+          axios.post('http://127.0.0.1:8080/employ/admin/insertAdmin.action', data).then(result => {
+            if (result.data.code > 0) {
+              if (window.confirm('保存成功,是否继续添加？')) {
+                _this.reset();
+              } else {
+                var index = parent.layer.getFrameIndex(window.name);
+                parent.location.reload();
+                parent.layer.close(index);
+              }
+            } else {
+              console.log('保存失败,请稍后再试');
+            }
+          });
+        },
+        reset: function () {
+          this.pageLoad();
+        },
+        pageLoad: function () { // 页面加载
+          this.username = '';
+          this.password = '';
+          this.realname = '';
+          this.contact = '';
+        },
+        validate: function () { // 验证输入非空
+        },
+      },
+      created() { // 生命周期相关的函数
+        let _this = this;
+        _this.pageLoad();
+      },
+    })
+  </script>
+
+
+</body>
+
+</html>

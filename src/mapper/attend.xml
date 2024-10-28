@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 配置关于员工考勤表的 MyBatis映射文件 -->
+<!-- namespace：必须与对应的接口全类名一致 id:必须与对应接口的某个对应的方法名一致 -->
+<mapper namespace="com.dao.AttendDAO">
+	<resultMap type="attend" id="attendMap">
+		<id property="attendid" column="attendid" />
+		<result property="employid" column="employid" />
+		<result property="work" column="work" />
+		<result property="addtime" column="addtime" />
+		<result property="memo" column="memo" />
+		<result property="realname" column="realname" />
+	</resultMap>
+
+	<!-- 员工考勤表 插入SQL语句 AttendDAO通过ID(insertAttend)调用此配置 -->
+	<insert id="insertAttend" parameterType="attend">
+		insert into attend(attendid , employid , work , addtime , memo ) values(#{attendid} , #{employid} , #{work} ,
+		#{addtime} , #{memo} )
+	</insert>
+
+	<!-- 员工考勤表 更新SQL语句 AttendDAO通过ID(updateAttend)调用此配置 -->
+	<update id="updateAttend" parameterType="attend">
+		update attend set employid=#{employid} , work=#{work} , addtime=#{addtime} , memo=#{memo} where
+		attendid=#{attendid}
+	</update>
+
+	<!-- 员工考勤表 按主键删除SQL语句 AttendDAO通过ID(deleteAttend)调用此配置 -->
+	<delete id="deleteAttend" parameterType="String">
+		delete from attend where attendid = #{attendid}
+	</delete>
+
+	<!-- 员工考勤表 查询全部员工考勤信息SQL语句 AttendDAO通过ID(getAllAttend)调用此配置 -->
+	<select id="getAllAttend" resultMap="attendMap">
+		select a.* , b.realname from attend a , employ b where 1=1 and a.employid = b.employid order by attendid desc
+	</select>
+
+	<!-- 员工考勤表 按主键(attendid)查询SQL语句 AttendDAO通过ID(getAttendById)调用此配置 -->
+	<select id="getAttendById" parameterType="String" resultMap="attendMap">
+		select a.* , b.realname from attend a , employ b where 1=1 and a.employid = b.employid and
+		attendid=#{attendid} order by attendid desc
+	</select>
+
+	<!-- 员工考勤表 按条件精确查询SQL语句 AttendDAO通过ID(getAttendByCond)调用此配置 -->
+	<select id="getAttendByCond" parameterType="attend" resultMap="attendMap">
+		select a.* , b.realname from attend a , employ b where 1=1 and a.employid = b.employid
+		<if test="employid != null and '' != employid">
+			and a.employid = #{employid}
+		</if>
+		<if test="work != null and '' != work">
+			and a.work = #{work}
+		</if>
+		<if test="addtime != null and '' != addtime">
+			and a.addtime = #{addtime}
+		</if>
+		<if test="memo != null and '' != memo">
+			and a.memo = #{memo}
+		</if>
+	</select>
+
+	<!-- 员工考勤表 按条件模糊查询SQL语句 AttendDAO通过ID(getAttendByLike)调用此配置 -->
+	<select id="getAttendByLike" parameterType="attend" resultMap="attendMap">
+		select a.* , b.realname from attend a , employ b where 1=1 and a.employid = b.employid
+		<if test="employid != null and '' != employid">
+			and b.realname like CONCAT('%', CONCAT(#{employid}, '%'))
+		</if>
+		<if test="work != null and '' != work">
+			and a.work like CONCAT('%', CONCAT(#{work}, '%'))
+		</if>
+		<if test="addtime != null and '' != addtime">
+			and a.addtime like CONCAT('%', CONCAT(#{addtime}, '%'))
+		</if>
+		<if test="memo != null and '' != memo">
+			and a.memo like CONCAT('%', CONCAT(#{memo}, '%'))
+		</if>
+	</select>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

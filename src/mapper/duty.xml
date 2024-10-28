@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 配置关于职务表的 MyBatis映射文件 -->
+<!-- namespace：必须与对应的接口全类名一致 id:必须与对应接口的某个对应的方法名一致 -->
+<mapper namespace="com.dao.DutyDAO">
+	<resultMap type="duty" id="dutyMap">
+		<id property="dutyid" column="dutyid" />
+		<result property="dutyname" column="dutyname" />
+		<result property="addtime" column="addtime" />
+		<result property="memo" column="memo" />
+	</resultMap>
+
+	<!-- 职务表 插入SQL语句  DutyDAO通过ID(insertDuty)调用此配置 -->
+	<insert id="insertDuty" parameterType="duty">  
+		insert into duty(dutyid  , dutyname  , addtime  , memo ) values(#{dutyid}  , #{dutyname}   , #{addtime}   , #{memo} )
+	</insert>
+
+	<!-- 职务表 更新SQL语句  DutyDAO通过ID(updateDuty)调用此配置 -->
+	<update id="updateDuty" parameterType="duty">
+		update duty set  dutyname=#{dutyname}  , addtime=#{addtime}  , memo=#{memo}  where dutyid=#{dutyid}
+	</update>
+
+	<!-- 职务表 按主键删除SQL语句  DutyDAO通过ID(deleteDuty)调用此配置 -->
+	<delete id="deleteDuty" parameterType="String">
+		delete from duty where dutyid = #{dutyid}
+	</delete>
+
+	<!-- 职务表 查询全部职务信息SQL语句  DutyDAO通过ID(getAllDuty)调用此配置  -->
+	<select id="getAllDuty" resultMap="dutyMap">
+		select a.*  from duty a  where 1=1  order by dutyid desc
+	</select>
+
+	<!-- 职务表 按主键(dutyid)查询SQL语句 DutyDAO通过ID(getDutyById)调用此配置  -->
+	<select id="getDutyById" parameterType="String" resultMap="dutyMap">
+		select a.*  from duty a  where 1=1 and dutyid=#{dutyid} order by dutyid desc
+	</select>
+
+	<!-- 职务表 按条件精确查询SQL语句 DutyDAO通过ID(getDutyByCond)调用此配置  -->
+	<select id="getDutyByCond" parameterType="duty" resultMap="dutyMap">
+		select a.*  from duty a  where 1=1 
+		<if test="dutyname != null and '' != dutyname">
+			and a.dutyname = #{dutyname}  
+		</if>
+		<if test="addtime != null and '' != addtime">
+			and a.addtime = #{addtime}  
+		</if>
+		<if test="memo != null and '' != memo">
+			and a.memo = #{memo}  
+		</if>
+	</select>
+
+	<!-- 职务表 按条件模糊查询SQL语句 DutyDAO通过ID(getDutyByLike)调用此配置  -->
+	<select id="getDutyByLike" parameterType="duty" resultMap="dutyMap">
+		select a.*  from duty a  where 1=1 
+		<if test="dutyname != null and '' != dutyname">
+			and a.dutyname like CONCAT('%', CONCAT(#{dutyname}, '%'))
+		</if>
+		<if test="addtime != null and '' != addtime">
+			and a.addtime like CONCAT('%', CONCAT(#{addtime}, '%'))
+		</if>
+		<if test="memo != null and '' != memo">
+			and a.memo like CONCAT('%', CONCAT(#{memo}, '%'))
+		</if>
+	</select>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
